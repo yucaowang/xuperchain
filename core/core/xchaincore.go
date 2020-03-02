@@ -345,7 +345,7 @@ func (xc *XChainCore) repostOfflineTx() {
 		msgInfo, _ := proto.Marshal(batchTxMsg)
 		msg, _ := p2p_base.NewXuperMessage(p2p_base.XuperMsgVersion1, xc.bcname, header.GetLogid(), xuper_p2p.XuperMessage_BATCHPOSTTX, msgInfo, xuper_p2p.XuperMessage_SUCCESS)
 
-		filters := []p2p_base.FilterStrategy{p2p_base.DefaultStrategy}
+		filters := []p2p_base.FilterStrategy{p2p_base.NearestBucketStrategy}
 		if xc.NeedCoreConnection() {
 			filters = append(filters, p2p_base.CorePeersStrategy)
 		}
@@ -728,7 +728,7 @@ func (xc *XChainCore) doMiner() {
 			// send block id in Interactive_BroadCast_Mode
 			msgInfo, _ := proto.Marshal(block)
 			msg, _ := p2p_base.NewXuperMessage(p2p_base.XuperMsgVersion1, xc.bcname, "", xuper_p2p.XuperMessage_NEW_BLOCKID, msgInfo, xuper_p2p.XuperMessage_NONE)
-			filters := []p2p_base.FilterStrategy{p2p_base.DefaultStrategy}
+			filters := []p2p_base.FilterStrategy{p2p_base.NearestBucketStrategy}
 			if xc.NeedCoreConnection() {
 				filters = append(filters, p2p_base.CorePeersStrategy)
 			}
@@ -744,7 +744,7 @@ func (xc *XChainCore) doMiner() {
 			block.Block = freshBlock
 			msgInfo, _ := proto.Marshal(block)
 			msg, _ := p2p_base.NewXuperMessage(p2p_base.XuperMsgVersion1, xc.bcname, "", xuper_p2p.XuperMessage_SENDBLOCK, msgInfo, xuper_p2p.XuperMessage_NONE)
-			filters := []p2p_base.FilterStrategy{p2p_base.DefaultStrategy}
+			filters := []p2p_base.FilterStrategy{p2p_base.NearestBucketStrategy}
 			if xc.NeedCoreConnection() {
 				filters = append(filters, p2p_base.CorePeersStrategy)
 			}

@@ -122,7 +122,7 @@ func (xm *XChainMG) handlePostTx(msg *xuper_p2p.XuperMessage) {
 	}
 	if _, needRepost, _ := xm.ProcessTx(txStatus); needRepost {
 		opts := []p2p_base.MessageOption{
-			p2p_base.WithFilters([]p2p_base.FilterStrategy{p2p_base.DefaultStrategy}),
+			p2p_base.WithFilters([]p2p_base.FilterStrategy{p2p_base.NearestBucketStrategy}),
 			p2p_base.WithBcName(msg.GetHeader().GetBcname()),
 		}
 		go xm.P2pSvr.SendMessage(context.Background(), msg, opts...)
@@ -201,7 +201,7 @@ func (xm *XChainMG) HandleSendBlock(msg *xuper_p2p.XuperMessage) {
 	bc := xm.Get(bcname)
 	if xm.Cfg.BlockBroadcaseMode == 0 {
 		// send full block to peers in Full_BroadCast_Mode
-		filters := []p2p_base.FilterStrategy{p2p_base.DefaultStrategy}
+		filters := []p2p_base.FilterStrategy{p2p_base.NearestBucketStrategy}
 		if bc.NeedCoreConnection() {
 			filters = append(filters, p2p_base.CorePeersStrategy)
 		}
@@ -223,7 +223,7 @@ func (xm *XChainMG) HandleSendBlock(msg *xuper_p2p.XuperMessage) {
 			return
 		}
 		msg, _ := p2p_base.NewXuperMessage(p2p_base.XuperMsgVersion1, bcname, "", xuper_p2p.XuperMessage_NEW_BLOCKID, msgInfo, xuper_p2p.XuperMessage_NONE)
-		filters := []p2p_base.FilterStrategy{p2p_base.DefaultStrategy}
+		filters := []p2p_base.FilterStrategy{p2p_base.NearestBucketStrategy}
 		if bc.NeedCoreConnection() {
 			filters = append(filters, p2p_base.CorePeersStrategy)
 		}
@@ -294,7 +294,7 @@ func (xm *XChainMG) handleBatchPostTx(msg *xuper_p2p.XuperMessage) {
 		msg.Data.MsgInfo = txsData
 		msg.Header.DataCheckSum = p2p_base.CalDataCheckSum(msg)
 		opts := []p2p_base.MessageOption{
-			p2p_base.WithFilters([]p2p_base.FilterStrategy{p2p_base.DefaultStrategy}),
+			p2p_base.WithFilters([]p2p_base.FilterStrategy{p2p_base.NearestBucketStrategy}),
 			p2p_base.WithBcName(msg.GetHeader().GetBcname()),
 			p2p_base.WithCompress(xm.enableCompress),
 		}
@@ -536,7 +536,7 @@ func (xm *XChainMG) handleNewBlockID(msg *xuper_p2p.XuperMessage) {
 
 	// broadcast New_BlockID message
 	// since the origin message is New_BlockID, so ignore Full_BroadCast_Mode
-	filters := []p2p_base.FilterStrategy{p2p_base.DefaultStrategy}
+	filters := []p2p_base.FilterStrategy{p2p_base.NearestBucketStrategy}
 	if bc.NeedCoreConnection() {
 		filters = append(filters, p2p_base.CorePeersStrategy)
 	}

@@ -55,7 +55,7 @@ func (s *server) PostTx(ctx context.Context, in *pb.TxStatus) (*pb.CommonReply, 
 			msgInfo, _ := proto.Marshal(in)
 			msg, _ := p2p_base.NewXuperMessage(p2p_base.XuperMsgVersion1, in.GetBcname(), in.GetHeader().GetLogid(), xuper_p2p.XuperMessage_POSTTX, msgInfo, xuper_p2p.XuperMessage_NONE)
 			opts := []p2p_base.MessageOption{
-				p2p_base.WithFilters([]p2p_base.FilterStrategy{p2p_base.DefaultStrategy}),
+				p2p_base.WithFilters([]p2p_base.FilterStrategy{p2p_base.NearestBucketStrategy}),
 				p2p_base.WithBcName(in.GetBcname()),
 				p2p_base.WithCompress(s.mg.GetXchainmgConfig().EnableCompress),
 			}
@@ -92,7 +92,7 @@ func (s *server) BatchPostTx(ctx context.Context, in *pb.BatchTxs) (*pb.CommonRe
 
 		msg, _ := p2p_base.NewXuperMessage(p2p_base.XuperMsgVersion1, "", in.GetHeader().GetLogid(), xuper_p2p.XuperMessage_BATCHPOSTTX, txsData, xuper_p2p.XuperMessage_NONE)
 		opts := []p2p_base.MessageOption{
-			p2p_base.WithFilters([]p2p_base.FilterStrategy{p2p_base.DefaultStrategy}),
+			p2p_base.WithFilters([]p2p_base.FilterStrategy{p2p_base.NearestBucketStrategy}),
 			p2p_base.WithBcName(in.Txs[0].GetBcname()),
 		}
 		go s.mg.P2pSvr.SendMessage(context.Background(), msg, opts...)
