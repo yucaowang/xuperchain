@@ -34,7 +34,7 @@ p2p:
   #staticNodes:
   #  xuper:
   #    - "127.0.0.1:47102"
-  maxBroadcastPeers: 20
+  maxBroadcastPeers: 10
 
 miner:
   # 密钥存储路径
